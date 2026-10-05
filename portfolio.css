@@ -1,5 +1,0 @@
-@import url('/css/common.css');
-
-body[data-page="portfolio"] .portfolio-card {
-  min-height: 180px;
-}
