@@ -1,0 +1,5 @@
+@import url('/css/common.css');
+
+body[data-page="transactions"] .card {
+  overflow-x: auto;
+}

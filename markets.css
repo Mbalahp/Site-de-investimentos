@@ -1,0 +1,5 @@
+@import url('/css/common.css');
+
+body[data-page="markets"] .card {
+  padding-bottom: 24px;
+}

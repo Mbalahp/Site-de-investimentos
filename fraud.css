@@ -1,0 +1,7 @@
+@import url('/css/common.css');
+
+/* Estilos específicos da tela de fraudes */
+
+.fraud-alert {
+  cursor: default;
+}

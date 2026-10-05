@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deteção de Fraudes — Sabula Invest</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+  <link rel="stylesheet" href="/css/common.css" />
+  <link rel="stylesheet" href="/css/fraud.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+</head>
+
+<body>
+
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fa-solid fa-chart-line"></i>
+      </div>
+      Sabula Invest
+    </div>
+
+    <div class="nav-section">
+
+      <div class="nav-label">Principal</div>
+
+      <a class="nav-item" href="/index.html">
+        <span class="icon">
+          <i class="fa-solid fa-house"></i>
+        </span>
+        Home
+      </a>
+
+      <a class="nav-item" href="/transactions.html">
+        <span class="icon">
+          <i class="fa-solid fa-credit-card"></i>
+        </span>
+        Transações
+      </a>
+
+      <a class="nav-item" href="/portfolio.html">
+        <span class="icon">
+          <i class="fa-solid fa-chart-pie"></i>
+        </span>
+        Portfolio
+      </a>
+
+      <a class="nav-item" href="/wallet.html">
+        <span class="icon">
+          <i class="fa-solid fa-wallet"></i>
+        </span>
+        Carteira
+      </a>
+
+      <div class="nav-label">Análise</div>
+
+      <a class="nav-item active" href="/fraud.html">
+        <span class="icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </span>
+        Deteção de Fraudes
+        <span class="fraud-badge">3</span>
+      </a>
+
+      <a class="nav-item" href="/markets.html">
+        <span class="icon">
+          <i class="fa-solid fa-earth-africa"></i>
+        </span>
+        Mercados
+      </a>
+
+    </div>
+
+    <div class="sidebar-bottom">
+
+      <a class="nav-item" href="/index.html" style="margin-bottom:4px">
+        <span class="icon">
+          <i class="fa-solid fa-circle-question"></i>
+        </span>
+        Ajuda
+      </a>
+
+      <div class="user-info">
+        <div class="avatar">JD</div>
+
+        <div>
+          <div class="user-name">João Domingos</div>
+          <div class="user-role">Investidor</div>
+        </div>
+      </div>
+
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+
+      <div style="display:flex;align-items:center;gap:12px">
+
+        <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div class="page-title">
+          <i class="fa-solid fa-shield-halved"></i>
+          Deteção de Fraudes
+        </div>
+
+      </div>
+
+      <div class="topbar-right">
+
+        <div class="theme-toggle" onclick="toggleTheme()" title="Mudar tema">
+          <i class="fa-solid fa-moon"></i>
+        </div>
+
+        <div class="notif-btn">
+          <i class="fa-solid fa-bell"></i>
+          <div class="notif-dot"></div>
+        </div>
+
+        <div class="user-chip">
+          <div class="avatar" style="width:26px;height:26px;font-size:11px">JD</div>
+          João Domingos
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <div class="grid-4 section-gap">
+
+        <div class="card" style="border-color:rgba(232,75,106,0.4)">
+          <div class="card-title" style="color:var(--red)">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Alto Risco
+          </div>
+
+          <div class="stat-value" style="color:var(--red)">1</div>
+          <div class="stat-label">Alerta crítico</div>
+        </div>
+
+        <div class="card" style="border-color:rgba(232,184,75,0.4)">
+          <div class="card-title" style="color:var(--accent)">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            Médio Risco
+          </div>
+
+          <div class="stat-value" style="color:var(--accent)">2</div>
+          <div class="stat-label">Requer atenção</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <i class="fa-solid fa-circle-check"></i>
+            Empresas Limpas
+          </div>
+
+          <div class="stat-value" style="color:var(--green)">9</div>
+          <div class="stat-label">Sem anomalias</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <i class="fa-solid fa-calendar-days"></i>
+            Última Análise
+          </div>
+
+          <div class="stat-value" style="font-size:18px">Hoje 14:32</div>
+          <div class="stat-label">Atualização automática</div>
+        </div>
+
+      </div>
+
+      <div class="grid-2">
+
+        <div>
+
+          <div class="card section-gap">
+
+            <div class="card-header">
+
+              <div class="card-title">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                Alertas Ativos
+              </div>
+
+              <span class="badge badge-red">3 novos</span>
+
+            </div>
+
+            <!-- ALERTA 1 -->
+            <div class="fraud-alert high">
+
+              <div class="alert-icon">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+
+              <div style="flex:1">
+
+                <div class="alert-title">
+                  Volume Anómalo — BAIA.AO
+                </div>
+
+                <div class="alert-desc">
+                  Volume de transações 847% acima da média histórica nos últimos 3 dias.
+                  Possível manipulação de mercado ou insider trading.
+                </div>
+
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                  <span class="badge badge-red">Alto Risco — 94%</span>
+                  <span class="alert-meta">13 Mai 2026, 09:14</span>
+                </div>
+
+                <div class="risk-meter">
+                  <div class="risk-fill" style="width:94%;background:var(--red)"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- ALERTA 2 -->
+            <div class="fraud-alert medium">
+
+              <div class="alert-icon">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+
+              <div style="flex:1">
+
+                <div class="alert-title">
+                  Preço Artificialmente Inflado — ENSA.AO
+                </div>
+
+                <div class="alert-desc">
+                  Variação de +340% em 48h sem catalisador fundamental identificado.
+                  Padrão consistente com pump-and-dump.
+                </div>
+
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                  <span class="badge badge-yellow">Médio Risco — 67%</span>
+                  <span class="alert-meta">12 Mai 2026, 16:45</span>
+                </div>
+
+                <div class="risk-meter">
+                  <div class="risk-fill" style="width:67%;background:var(--accent)"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- ALERTA 3 -->
+            <div class="fraud-alert medium">
+
+              <div class="alert-icon">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+              </div>
+
+              <div style="flex:1">
+
+                <div class="alert-title">
+                  Padrão de Wash Trading — SONANGOL.AO
+                </div>
+
+                <div class="alert-desc">
+                  Detetadas transações circulares entre 3 contas suspeitas.
+                  Mesmo valor negociado múltiplas vezes no mesmo dia.
+                </div>
+
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                  <span class="badge badge-yellow">Médio Risco — 58%</span>
+                  <span class="alert-meta">11 Mai 2026, 11:20</span>
+                </div>
+
+                <div class="risk-meter">
+                  <div class="risk-fill" style="width:58%;background:var(--accent)"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <div class="card">
+
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-chart-column"></i>
+                Score de Risco por Empresa
+              </div>
+            </div>
+
+            <canvas id="fraudChart" height="220"></canvas>
+
+          </div>
+
+          <div class="card">
+
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-user-shield"></i>
+                Indicadores de Fraude
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px">
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>
+                    <i class="fa-solid fa-chart-simple"></i>
+                    Volume Anómalo
+                  </span>
+
+                  <span style="color:var(--red);font-weight:600">Alto</span>
+                </div>
+
+                <div class="risk-meter">
+                  <div class="risk-fill" style="width:85%;background:var(--red)"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>
+                    <i class="fa-solid fa-money-bill-trend-up"></i>
+                    Manipulação de Preço
+                  </span>
+
+                  <span style="color:var(--accent);font-weight:600">Médio</span>
+                </div>
+
+                <div class="risk-meter">
+                  <div class="risk-fill" style="width:60%;background:var(--accent)"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>
+                    <i class="fa-solid fa-user-secret"></i>
+                    Insider Trading
+                  </span>
+
+                  <span style="color:var(--accent);font-weight:600">Médio</span>
+                </div>
+
+                <div class="risk-meter">
+                  <div class="risk-fill" style="width:45%;background:var(--accent)"></div>
+                </div>
+              </div>
+
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Wash Trading
+                  </span>
+
+                  <span style="color:var(--blue);font-weight:600">Baixo</span>
+                </div>
+
+                <div class="risk-meter">
+                  <div class="risk-fill" style="width:25%;background:var(--blue)"></div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MOBILE NAV -->
+  <nav class="bottom-nav">
+
+    <a class="bnav-item" href="/index.html">
+      <span class="icon">
+        <i class="fa-solid fa-house"></i>
+      </span>
+      <span>Home</span>
+    </a>
+
+    <a class="bnav-item" href="/transactions.html">
+      <span class="icon">
+        <i class="fa-solid fa-credit-card"></i>
+      </span>
+      <span>Transações</span>
+    </a>
+
+    <a class="bnav-item" href="/portfolio.html">
+      <span class="icon">
+        <i class="fa-solid fa-chart-pie"></i>
+      </span>
+      <span>Portfolio</span>
+    </a>
+
+    <a class="bnav-item" href="/wallet.html">
+      <span class="icon">
+        <i class="fa-solid fa-wallet"></i>
+      </span>
+      <span>Carteira</span>
+    </a>
+
+    <a class="bnav-item active" href="/fraud.html">
+      <span class="icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </span>
+      <span>Fraudes</span>
+    </a>
+
+  </nav>
+
+  <script type="module" src="/js/app.js"></script>
+
+</body>
+</html>

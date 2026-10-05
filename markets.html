@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Mercados — Sabula Invest</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Seus CSS -->
+  <link rel="stylesheet" href="/css/common.css" />
+  <link rel="stylesheet" href="/css/markets.css" />
+
+  <!-- Charts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+</head>
+
+<body class="bg-[#0f172a] text-white">
+
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar bg-slate-900 border-r border-slate-800" id="sidebar">
+
+    <!-- LOGO -->
+    <div class="logo flex items-center gap-3 px-5 py-5 text-xl font-bold">
+      <div class="logo-icon w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center">
+        <i data-lucide="candlestick-chart" class="w-5 h-5"></i>
+      </div>
+      Sabula Invest
+    </div>
+
+    <div class="nav-section px-3">
+
+      <div class="nav-label text-slate-400 uppercase text-xs mb-2 px-3">
+        Principal
+      </div>
+
+      <!-- HOME -->
+      <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition"
+         href="/index.html">
+
+        <i data-lucide="house" class="w-5 h-5"></i>
+        Home
+      </a>
+
+      <!-- TRANSAÇÕES -->
+      <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition"
+         href="/transactions.html">
+
+        <i data-lucide="credit-card" class="w-5 h-5"></i>
+        Transações
+      </a>
+
+      <!-- PORTFOLIO -->
+      <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition"
+         href="/portfolio.html">
+
+        <i data-lucide="pie-chart" class="w-5 h-5"></i>
+        Portfolio
+      </a>
+
+      <!-- CARTEIRA -->
+      <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition"
+         href="/wallet.html">
+
+        <i data-lucide="wallet" class="w-5 h-5"></i>
+        Carteira
+      </a>
+
+      <!-- ANALISE -->
+      <div class="nav-label text-slate-400 uppercase text-xs mt-6 mb-2 px-3">
+        Análise
+      </div>
+
+      <!-- MERCADOS -->
+      <a class="nav-item active flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white"
+         href="/markets.html">
+
+        <i data-lucide="globe" class="w-5 h-5"></i>
+        Mercados
+      </a>
+
+      <!-- FRAUDE -->
+      <a class="nav-item flex items-center justify-between px-4 py-3 rounded-xl hover:bg-slate-800 transition"
+         href="/fraud.html">
+
+        <div class="flex items-center gap-3">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          Deteção de Fraudes
+        </div>
+
+        <span class="bg-red-500 text-xs px-2 py-1 rounded-full">
+          3
+        </span>
+      </a>
+    </div>
+
+    <!-- BOTTOM -->
+    <div class="sidebar-bottom mt-auto p-3 border-t border-slate-800">
+
+      <a class="nav-item flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 transition"
+         href="/index.html">
+
+        <i data-lucide="circle-help" class="w-5 h-5"></i>
+        Ajuda
+      </a>
+
+      <div class="user-info flex items-center gap-3 mt-4 px-3">
+
+        <div class="avatar w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">
+          JD
+        </div>
+
+        <div>
+          <div class="user-name font-semibold">
+            João Domingos
+          </div>
+
+          <div class="user-role text-sm text-slate-400">
+            Investidor
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900">
+
+      <div class="flex items-center gap-4">
+
+        <button class="menu-btn text-2xl"
+                id="menuBtn"
+                onclick="toggleSidebar()">
+
+          <i data-lucide="menu"></i>
+        </button>
+
+        <div class="page-title text-2xl font-bold">
+          Mercados
+        </div>
+      </div>
+
+      <div class="topbar-right flex items-center gap-4">
+
+        <button class="theme-toggle hover:text-blue-400">
+          <i data-lucide="moon"></i>
+        </button>
+
+        <button class="notif-btn relative hover:text-blue-400">
+
+          <i data-lucide="bell"></i>
+
+          <div class="notif-dot absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></div>
+        </button>
+
+        <div class="user-chip flex items-center gap-2 bg-slate-800 px-3 py-2 rounded-xl">
+
+          <div class="avatar w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-xs">
+            JD
+          </div>
+
+          João Domingos
+
+          <i data-lucide="chevron-down" class="w-4 h-4"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content p-6">
+
+      <div class="card bg-slate-900 border border-slate-800 rounded-2xl p-6">
+
+        <div class="card-header flex items-center justify-between mb-6">
+
+          <div class="card-title text-xl font-bold">
+            Mercado BODIVA — Bolsa de Dívida e Valores de Angola
+          </div>
+
+          <span class="badge badge-green bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm">
+            ● Mercado Aberto
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+
+          <table class="w-full">
+
+            <thead class="text-slate-400 border-b border-slate-800">
+              <tr>
+                <th class="text-left py-3">Ticker</th>
+                <th class="text-left py-3">Empresa</th>
+                <th class="text-left py-3">Preço</th>
+                <th class="text-left py-3">Var. Hoje</th>
+                <th class="text-left py-3">Volume</th>
+                <th class="text-left py-3">Cap. Mercado</th>
+                <th class="text-left py-3">Score Fraude</th>
+              </tr>
+            </thead>
+
+            <tbody id="marketsTable"></tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav fixed bottom-0 left-0 right-0 bg-slate-900 border-t border-slate-800 flex justify-around py-3 md:hidden">
+
+    <a class="bnav-item flex flex-col items-center text-sm"
+       href="/index.html">
+
+      <i data-lucide="house" class="w-5 h-5"></i>
+      <span>Home</span>
+    </a>
+
+    <a class="bnav-item flex flex-col items-center text-sm"
+       href="/transactions.html">
+
+      <i data-lucide="credit-card" class="w-5 h-5"></i>
+      <span>Transações</span>
+    </a>
+
+    <a class="bnav-item flex flex-col items-center text-sm"
+       href="/portfolio.html">
+
+      <i data-lucide="pie-chart" class="w-5 h-5"></i>
+      <span>Portfolio</span>
+    </a>
+
+    <a class="bnav-item flex flex-col items-center text-sm"
+       href="/wallet.html">
+
+      <i data-lucide="wallet" class="w-5 h-5"></i>
+      <span>Carteira</span>
+    </a>
+
+    <a class="bnav-item active flex flex-col items-center text-sm text-blue-400"
+       href="/markets.html">
+
+      <i data-lucide="globe" class="w-5 h-5"></i>
+      <span>Mercados</span>
+    </a>
+  </nav>
+
+  <!-- APP -->
+  <script type="module" src="/js/app.js"></script>
+
+  <!-- LUCIDE INIT -->
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

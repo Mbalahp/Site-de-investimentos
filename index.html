@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="pt" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sabula Invest — Bolsa de Angola</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="/css/common.css" />
+  <link rel="stylesheet" href="/css/home.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.1.1/dist/chartjs-chart-financial.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1/dist/chartjs-adapter-luxon.umd.min.js"></script>
+
+</head>
+<body data-page="home">
+
+<!-- Overlay mobile -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+    Sabula Invest
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Principal</div>
+    <div class="nav-item active" onclick="showPage('home', this)">
+      <span class="icon"><i class="fa-solid fa-house"></i></span> Home
+    </div>
+    <div class="nav-item" onclick="showPage('transactions', this)">
+      <span class="icon"><i class="fa-solid fa-credit-card"></i></span> Transações
+    </div>
+    <div class="nav-item" onclick="showPage('portfolio', this)">
+      <span class="icon"><i class="fa-solid fa-chart-pie"></i></span> Portfolio
+    </div>
+    <div class="nav-item" onclick="showPage('wallet', this)">
+      <span class="icon"><i class="fa-solid fa-wallet"></i></span> Carteira
+    </div>
+
+    <div class="nav-label">Análise</div>
+    <div class="nav-item" onclick="showPage('markets', this)">
+      <span class="icon"><i class="fa-solid fa-earth-africa"></i></span> Mercados
+    </div>
+    <div class="nav-item" onclick="showPage('fraud', this)">
+      <span class="icon"><i class="fa-solid fa-shield-halved"></i></span> Deteção de Fraudes
+      <span class="fraud-badge">3</span>
+    </div>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="nav-item" onclick="showPage('home', this)" style="margin-bottom:4px">
+      <span class="icon"><i class="fa-solid fa-circle-question"></i></span> Ajuda
+    </div>
+    <div class="user-info">
+      <div class="avatar">JD</div>
+      <div>
+        <div class="user-name">João Domingos</div>
+        <div class="user-role">Investidor</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()">☰</button>
+      <div class="page-title" id="pageTitle">Home</div>
+    </div>
+    <div class="topbar-right">
+      <div class="theme-toggle" onclick="toggleTheme()" title="Mudar tema"><i class="fa-solid fa-moon"></i></div>
+      <div class="notif-btn">
+        <i class="fa-solid fa-bell"></i>
+        <div class="notif-dot"></div>
+      </div>
+      <div class="user-chip">
+        <div class="avatar" style="width:26px;height:26px;font-size:11px">JD</div>
+        João Domingos ▾
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- HOME PAGE -->
+    <div class="page active" id="page-home">
+      <!-- Stats Row -->
+      <div class="grid-4 section-gap">
+        <div class="card">
+          <div class="card-title">Saldo Total</div>
+          <div class="stat-value" style="color:var(--accent)">AOA 2.4M</div>
+          <div class="stat-label">Portfólio total</div>
+          <span class="badge badge-green">▲ +8.1% esta semana</span>
+        </div>
+        <div class="card">
+          <div class="card-title">Ganhos Hoje</div>
+          <div class="stat-value" style="color:var(--green)">AOA 42.580</div>
+          <div class="stat-label">Lucro realizado</div>
+          <span class="badge badge-green">▲ +2.3%</span>
+        </div>
+        <div class="card">
+          <div class="card-title">Ativos Ativos</div>
+          <div class="stat-value">12</div>
+          <div class="stat-label">Empresas na BODIVA</div>
+          <span class="badge badge-yellow">3 em atenção</span>
+        </div>
+        <div class="card" onclick="showPage('fraud', document.querySelector('[onclick*=fraud]'))" style="cursor:pointer;border-color:rgba(232,75,106,0.3)">
+          <div class="card-title" style="color:var(--red)"><i class="fa-solid fa-triangle-exclamation"></i> Alertas Fraude</div>
+          <div class="stat-value" style="color:var(--red)">3</div>
+          <div class="stat-label">Anomalias detetadas</div>
+          <span class="badge badge-red">Ver detalhes →</span>
+        </div>
+      </div>
+
+      <!-- Candlestick Chart + Markets -->
+      <div class="grid-2 section-gap">
+        <div class="card">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="ticker-logo" style="background:#e8b84b;width:28px;height:28px;font-size:10px">BI</div>
+              <div>
+                <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px">BODIVA Index</div>
+                <div style="font-size:11px;color:var(--text2)">Índice Principal</div>
+              </div>
+            </div>
+            <div class="time-btns">
+              <button class="time-btn" onclick="setCandleTime(this,'12H')">12H</button>
+              <button class="time-btn" onclick="setCandleTime(this,'1D')">1D</button>
+              <button class="time-btn active" onclick="setCandleTime(this,'1W')">1W</button>
+              <button class="time-btn" onclick="setCandleTime(this,'1M')">1M</button>
+              <button class="time-btn" onclick="setCandleTime(this,'1Y')">1Y</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+            <div style="font-family:'Syne',sans-serif;font-size:32px;font-weight:800">AOA 15.780<span style="font-size:18px">,01</span></div>
+            <span class="badge badge-red">▼ -2,02 (0,90%) Hoje</span>
+          </div>
+          <canvas id="candleChart" height="180"></canvas>
+          <!-- Statistics -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Abertura</div>
+              <div style="font-weight:700;color:var(--accent);font-size:13px">15.224,54</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Máximo</div>
+              <div style="font-weight:700;color:var(--green);font-size:13px">15.927,29</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Mínimo</div>
+              <div style="font-weight:700;color:var(--red);font-size:13px">15.224,10</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Volume</div>
+              <div style="font-weight:700;font-size:13px">834.146</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Vol. Médio</div>
+              <div style="font-weight:700;font-size:13px">1.461.009</div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:2px">Cap. Mercado</div>
+              <div style="font-weight:700;font-size:13px">43.419B</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Mercados</div>
+              <div style="display:flex;gap:6px">
+                <button class="time-btn active" onclick="filterMarket(this,'all')">Todos</button>
+                <button class="time-btn" onclick="filterMarket(this,'up')">↑ Alta</button>
+                <button class="time-btn" onclick="filterMarket(this,'down')">↓ Baixa</button>
+              </div>
+            </div>
+            <div id="marketList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Portfolio Cards + Watchlist -->
+      <div class="section-gap">
+        <div class="card-header" style="margin-bottom:14px">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Portfolio</div>
+          <span style="font-size:13px;color:var(--accent);cursor:pointer;font-weight:600" onclick="showPage('portfolio', null)">Ver tudo →</span>
+        </div>
+        <div id="portfolioCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:24px"></div>
+
+        <div class="card-header" style="margin-bottom:14px">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Watchlist</div>
+          <span style="font-size:13px;color:var(--accent);cursor:pointer;font-weight:600">Gerir →</span>
+        </div>
+        <div class="card">
+          <table>
+            <thead><tr><th>Ativo</th><th>Preço</th><th>24h</th><th>Gráfico</th></tr></thead>
+            <tbody id="watchlistTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAUD PAGE -->
+    <div class="page" id="page-fraud">
+      <div class="grid-4 section-gap">
+        <div class="card" style="border-color:rgba(232,75,106,0.4)">
+          <div class="card-title" style="color:var(--red)"><i class="fa-solid fa-triangle-exclamation"></i> Alto Risco</div>
+          <div class="stat-value" style="color:var(--red)">1</div>
+          <div class="stat-label">Alerta crítico</div>
+        </div>
+        <div class="card" style="border-color:rgba(232,184,75,0.4)">
+          <div class="card-title" style="color:var(--accent)"><i class="fa-solid fa-circle-exclamation"></i> Médio Risco</div>
+          <div class="stat-value" style="color:var(--accent)">2</div>
+          <div class="stat-label">Requer atenção</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-circle-check"></i> Empresas Limpas</div>
+          <div class="stat-value" style="color:var(--green)">9</div>
+          <div class="stat-label">Sem anomalias</div>
+        </div>
+        <div class="card">
+          <div class="card-title"><i class="fa-solid fa-calendar-days"></i> Última Análise</div>
+          <div class="stat-value" style="font-size:18px">Hoje 14:32</div>
+          <div class="stat-label">Atualização automática</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="card section-gap">
+            <div class="card-header">
+              <div class="card-title"><i class="fa-solid fa-magnifying-glass"></i> Alertas Ativos</div>
+              <span class="badge badge-red">3 novos</span>
+            </div>
+
+            <div class="fraud-alert high">
+              <div class="alert-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+              <div style="flex:1">
+                <div class="alert-title">Volume Anómalo — BAIA.AO</div>
+                <div class="alert-desc">Volume de transações 847% acima da média histórica nos últimos 3 dias. Possível manipulação de mercado ou insider trading.</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                  <span class="badge badge-red">Alto Risco — 94%</span>
+                  <span class="alert-meta">13 Mai 2026, 09:14</span>
+                </div>
+                <div class="risk-meter"><div class="risk-fill" style="width:94%;background:var(--red)"></div></div>
+              </div>
+            </div>
+
+            <div class="fraud-alert medium">
+              <div class="alert-icon"><i class="fa-solid fa-chart-line"></i></div>
+              <div style="flex:1">
+                <div class="alert-title">Preço Artificialmente Inflado — ENSA.AO</div>
+                <div class="alert-desc">Variação de +340% em 48h sem catalisador fundamental identificado. Padrão consistente com pump-and-dump.</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                  <span class="badge badge-yellow">Médio Risco — 67%</span>
+                  <span class="alert-meta">12 Mai 2026, 16:45</span>
+                </div>
+                <div class="risk-meter"><div class="risk-fill" style="width:67%;background:var(--accent)"></div></div>
+              </div>
+            </div>
+
+            <div class="fraud-alert medium">
+              <div class="alert-icon"><i class="fa-solid fa-arrow-right-arrow-left"></i></div>
+              <div style="flex:1">
+                <div class="alert-title">Padrão de Wash Trading — SONANGOL.AO</div>
+                <div class="alert-desc">Detetadas transações circulares entre 3 contas suspeitas. Mesmo valor negociado múltiplas vezes no mesmo dia.</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                  <span class="badge badge-yellow">Médio Risco — 58%</span>
+                  <span class="alert-meta">11 Mai 2026, 11:20</span>
+                </div>
+                <div class="risk-meter"><div class="risk-fill" style="width:58%;background:var(--accent)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fa-solid fa-chart-column"></i> Score de Risco por Empresa</div>
+            </div>
+            <canvas id="fraudChart" height="220"></canvas>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><i class="fa-solid fa-user-shield"></i> Indicadores de Fraude</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>Volume Anómalo</span><span style="color:var(--red);font-weight:600">Alto</span>
+                </div>
+                <div class="risk-meter"><div class="risk-fill" style="width:85%;background:var(--red)"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>Manipulação de Preço</span><span style="color:var(--accent);font-weight:600">Médio</span>
+                </div>
+                <div class="risk-meter"><div class="risk-fill" style="width:60%;background:var(--accent)"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>Insider Trading</span><span style="color:var(--accent);font-weight:600">Médio</span>
+                </div>
+                <div class="risk-meter"><div class="risk-fill" style="width:45%;background:var(--accent)"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                  <span>Wash Trading</span><span style="color:var(--blue);font-weight:600">Baixo</span>
+                </div>
+                <div class="risk-meter"><div class="risk-fill" style="width:25%;background:var(--blue)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRANSACTIONS PAGE -->
+    <div class="page" id="page-transactions">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Histórico de Transações</div>
+          <button class="time-btn active">Exportar CSV</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Data</th><th>Empresa</th><th>Tipo</th><th>Quantidade</th><th>Preço</th><th>Total</th><th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="transactionsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PORTFOLIO PAGE -->
+    <div class="page" id="page-portfolio">
+      <div class="grid-4 section-gap">
+        <div class="card">
+          <div class="card-title">Valor Total</div>
+          <div class="stat-value" style="color:var(--accent)">AOA 2.4M</div>
+          <span class="badge badge-green">▲ +8.1%</span>
+        </div>
+        <div class="card">
+          <div class="card-title">Lucro Total</div>
+          <div class="stat-value" style="color:var(--green)">AOA 342K</div>
+          <span class="badge badge-green">▲ +16.4%</span>
+        </div>
+        <div class="card">
+          <div class="card-title">Ativos</div>
+          <div class="stat-value">12</div>
+          <div class="stat-label">Posições abertas</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Dividendos</div>
+          <div class="stat-value">AOA 28K</div>
+          <span class="badge badge-yellow">Este ano</span>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Distribuição do Portfolio</div>
+          </div>
+          <canvas id="portfolioChart" height="260"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Posições</div></div>
+          <table>
+            <thead><tr><th>Empresa</th><th>Valor</th><th>P&L</th><th>%</th></tr></thead>
+            <tbody id="portfolioFullTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- WALLET PAGE -->
+    <div class="page" id="page-wallet">
+      <div class="grid-3 section-gap">
+        <div class="card" style="border-color:rgba(232,184,75,0.3)">
+          <div class="card-title">💰 Saldo Disponível</div>
+          <div class="stat-value" style="color:var(--accent)">AOA 850.000</div>
+          <div class="stat-label">Para investir</div>
+          <button class="time-btn active" style="margin-top:12px;padding:8px 16px">Depositar</button>
+        </div>
+        <div class="card">
+          <div class="card-title">📤 Total Investido</div>
+          <div class="stat-value">AOA 1.6M</div>
+          <div class="stat-label">Em ativos</div>
+        </div>
+        <div class="card">
+          <div class="card-title">💸 Total Retirado</div>
+          <div class="stat-value">AOA 240K</div>
+          <div class="stat-label">Lucros realizados</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Movimentos Recentes</div></div>
+        <table>
+          <thead><tr><th>Data</th><th>Tipo</th><th>Valor</th><th>Estado</th></tr></thead>
+          <tbody id="walletTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MARKETS PAGE -->
+    <div class="page" id="page-markets">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Mercado BODIVA — Bolsa de Dívida e Valores de Angola</div>
+          <span class="badge badge-green">● Mercado Aberto</span>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Ticker</th><th>Empresa</th><th>Preço</th><th>Var. Hoje</th><th>Volume</th><th>Cap. Mercado</th><th>Score Fraude</th></tr>
+          </thead>
+          <tbody id="marketsTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+</div><!-- end main -->
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bnav-item active" onclick="showPage('home',null);setActiveNav(this)">
+    <span class="icon"><i class="fa-solid fa-house"></i></span><span>Home</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('portfolio',null);setActiveNav(this)">
+    <span class="icon"><i class="fa-solid fa-chart-pie"></i></span><span>Portfolio</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('fraud',null);setActiveNav(this)">
+    <span class="icon"><i class="fa-solid fa-shield-halved"></i></span><span>Fraudes</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('transactions',null);setActiveNav(this)">
+    <span class="icon"><i class="fa-solid fa-credit-card"></i></span><span>Transações</span>
+  </div>
+  <div class="bnav-item" onclick="showPage('wallet',null);setActiveNav(this)">
+    <span class="icon"><i class="fa-solid fa-wallet"></i></span><span>Carteira</span>
+  </div>
+</nav>
+
+<script>
+// DATA
+const stocks = [
+  { ticker: 'BAIA', name: 'Banco BAI', price: 245.80, change: 2.5, volume: '1.2M', cap: '42B', color: '#4b8ef0', fraud: 94 },
+  { ticker: 'BFA',  name: 'Banco BFA', price: 189.40, change: -1.2, volume: '890K', cap: '28B', color: '#2ecc8a', fraud: 12 },
+  { ticker: 'ENSA', name: 'ENSA Seguros', price: 312.60, change: 5.8, volume: '2.1M', cap: '15B', color: '#e84b6a', fraud: 67 },
+  { ticker: 'SONO', name: 'Sonangol', price: 520.00, change: -0.8, volume: '5.4M', cap: '120B', color: '#e8b84b', fraud: 58 },
+  { ticker: 'AANG', name: 'AAng Telecom', price: 98.20, change: 3.1, volume: '450K', cap: '8B', color: '#9b59b6', fraud: 8 },
+  { ticker: 'BCGA', name: 'Banco Caixa', price: 156.70, change: 0.4, volume: '320K', cap: '22B', color: '#e67e22', fraud: 15 },
+  { ticker: 'TAAG', name: 'TAAG Airlines', price: 45.30, change: -3.2, volume: '1.8M', cap: '6B', color: '#1abc9c', fraud: 22 },
+  { ticker: 'UNITEL', name: 'Unitel', price: 280.90, change: 1.9, volume: '900K', cap: '35B', color: '#e74c3c', fraud: 18 },
+];
+
+// PAGE NAVIGATION
+function showPage(name, navEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+
+  const titles = { home:'Home', transactions:'Transações', portfolio:'Portfolio', wallet:'Carteira', markets:'Mercados', fraud:'Deteção de Fraudes' };
+  document.getElementById('pageTitle').textContent = titles[name] || name;
+
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+
+  closeSidebar();
+  initPageCharts(name);
+}
+
+function setActiveNav(el) {
+  document.querySelectorAll('.bnav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// SIDEBAR MOBILE
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// THEME
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  const toggle = document.querySelector('.theme-toggle');
+  if (toggle) {
+    toggle.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+  }
+  setTimeout(() => initPageCharts('home'), 100);
+}
+
+// TIME BUTTONS
+function setTime(btn) {
+  btn.closest('.time-btns').querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function filterMarket(btn, type) {
+  btn.closest('.time-btns').querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// GENERATE CHART DATA
+function randData(base, points, volatility) {
+  const data = [];
+  let v = base;
+  for (let i = 0; i < points; i++) {
+    v += (Math.random() - 0.48) * volatility;
+    data.push(Math.max(0, v));
+  }
+  return data;
+}
+
+function getColors() {
+  const s = getComputedStyle(document.documentElement);
+  return {
+    accent: s.getPropertyValue('--accent').trim(),
+    green: s.getPropertyValue('--green').trim(),
+    red: s.getPropertyValue('--red').trim(),
+    blue: s.getPropertyValue('--blue').trim(),
+    text2: s.getPropertyValue('--text2').trim(),
+    border: s.getPropertyValue('--border').trim(),
+    bg3: s.getPropertyValue('--bg3').trim(),
+  };
+}
+
+let charts = {};
+
+function initPageCharts(page) {
+  if (page === 'home') initHomeCharts();
+  if (page === 'fraud') initFraudChart();
+  if (page === 'portfolio') initPortfolioChart();
+}
+
+function setCandleTime(btn, period) {
+  btn.closest('.time-btns').querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  initCandleChart();
+}
+
+function generateCandles(base, count, vol) {
+  const data = [];
+  let price = base;
+  const now = Date.now();
+  for (let i = count; i >= 0; i--) {
+    const open = price;
+    const change = (Math.random() - 0.48) * vol;
+    const close = open + change;
+    const high = Math.max(open, close) + Math.random() * vol * 0.4;
+    const low = Math.min(open, close) - Math.random() * vol * 0.4;
+    data.push({ x: now - i * 24 * 3600 * 1000, o: +open.toFixed(2), h: +high.toFixed(2), l: +low.toFixed(2), c: +close.toFixed(2) });
+    price = close;
+  }
+  return data;
+}
+
+function initCandleChart() {
+  const c = getColors();
+  if (charts.candle) charts.candle.destroy();
+  const ctx = document.getElementById('candleChart');
+  if (!ctx) return;
+  const data = generateCandles(15000, 28, 180);
+  charts.candle = new Chart(ctx, {
+    type: 'candlestick',
+    data: {
+      datasets: [{
+        label: 'BODIVA Index',
+        data: data,
+        color: {
+          up: '#2ecc8a',
+          down: '#e84b6a',
+          unchanged: '#8b93b0',
+        },
+        borderColor: {
+          up: '#2ecc8a',
+          down: '#e84b6a',
+          unchanged: '#8b93b0',
+        },
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              const d = ctx.raw;
+              return [`O: ${d.o}`, `H: ${d.h}`, `L: ${d.l}`, `C: ${d.c}`];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          type: 'time',
+          time: { unit: 'day', displayFormats: { day: 'EEE' } },
+          grid: { color: c.border },
+          ticks: { color: c.text2, font: { size: 11 }, maxTicksLimit: 7 },
+        },
+        y: {
+          position: 'right',
+          grid: { color: c.border },
+          ticks: { color: c.text2, font: { size: 11 } },
+        }
+      }
+    }
+  });
+}
+
+function initHomeCharts() {
+  initCandleChart();
+}
+
+// PORTFOLIO CARDS WITH MINI LINE CHARTS
+const miniChartInstances = {};
+
+function populatePortfolioCards() {
+  const el = document.getElementById('portfolioCards');
+  if (!el) return;
+  el.innerHTML = '';
+
+  stocks.slice(0, 6).forEach((s, i) => {
+    const isUp = s.change >= 0;
+    const canvasId = `mini-${s.ticker}`;
+    const card = document.createElement('div');
+    card.className = 'portfolio-card';
+    card.innerHTML = `
+      <div class="portfolio-card-header">
+        <div class="ticker-logo" style="background:${s.color};width:36px;height:36px;font-size:12px">${s.ticker.slice(0,2)}</div>
+        <div>
+          <div style="font-weight:700;font-size:14px">${s.ticker}</div>
+          <div style="font-size:11px;color:var(--text2)">${s.name}</div>
+        </div>
+      </div>
+      <div class="portfolio-card-price">AOA ${s.price.toFixed(2)}</div>
+      <div class="portfolio-card-prev" style="color:var(--text3)">AOA ${(s.price * 0.97).toFixed(2)}</div>
+      <span class="badge ${isUp ? 'badge-green' : 'badge-red'}" style="margin-bottom:10px">${isUp ? '▲' : '▼'} ${Math.abs(s.change)}%</span>
+      <canvas id="${canvasId}" class="portfolio-card-canvas"></canvas>
+    `;
+    el.appendChild(card);
+
+    setTimeout(() => {
+      const ctx = document.getElementById(canvasId);
+      if (!ctx) return;
+      if (miniChartInstances[s.ticker]) miniChartInstances[s.ticker].destroy();
+      const lineData = Array.from({length: 20}, (_, j) => {
+        const base = s.price * 0.95;
+        return base + Math.random() * s.price * 0.08;
+      });
+      miniChartInstances[s.ticker] = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: lineData.map((_, i) => i),
+          datasets: [{
+            data: lineData,
+            borderColor: isUp ? '#2ecc8a' : '#e84b6a',
+            backgroundColor: isUp ? 'rgba(46,204,138,0.1)' : 'rgba(232,75,106,0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 0,
+            borderWidth: 2,
+          }]
+        },
+        options: {
+          responsive: false,
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
+          scales: { x: { display: false }, y: { display: false } },
+          animation: { duration: 600 },
+        }
+      });
+    }, 50);
+  });
+}
+
+
+function initFraudChart() {
+  const c = getColors();
+  if (charts.fraud) charts.fraud.destroy();
+  const ctx = document.getElementById('fraudChart');
+  if (!ctx) return;
+  charts.fraud = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: stocks.map(s => s.ticker),
+      datasets: [{
+        label: 'Score de Risco (%)',
+        data: stocks.map(s => s.fraud),
+        backgroundColor: stocks.map(s => s.fraud > 70 ? 'rgba(232,75,106,0.7)' : s.fraud > 40 ? 'rgba(232,184,75,0.7)' : 'rgba(46,204,138,0.7)'),
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { color: c.text2 } },
+        y: { grid: { color: c.border }, ticks: { color: c.text2, callback: v => v + '%' }, max: 100 }
+      }
+    }
+  });
+}
+
+function initPortfolioChart() {
+  const c = getColors();
+  if (charts.portfolio) charts.portfolio.destroy();
+  const ctx = document.getElementById('portfolioChart');
+  if (!ctx) return;
+  charts.portfolio = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: stocks.slice(0,6).map(s => s.ticker),
+      datasets: [{
+        data: [28, 18, 15, 20, 10, 9],
+        backgroundColor: stocks.slice(0,6).map(s => s.color),
+        borderWidth: 0,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: c.text2, padding: 16, font: { size: 12 } } }
+      },
+      cutout: '65%',
+    }
+  });
+}
+
+// POPULATE TABLES
+function populateMarketList() {
+  const el = document.getElementById('marketList');
+  if (!el) return;
+  el.innerHTML = stocks.slice(0,6).map(s => `
+    <div class="market-row">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="ticker-logo" style="background:${s.color}">${s.ticker.slice(0,2)}</div>
+        <div>
+          <div style="font-weight:600;font-size:13px">${s.ticker}</div>
+          <div style="font-size:11px;color:var(--text2)">${s.name}</div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:600;font-size:13px">AOA ${s.price.toFixed(2)}</div>
+        <div style="font-size:12px;color:${s.change >= 0 ? 'var(--green)' : 'var(--red)'}">${s.change >= 0 ? '▲' : '▼'} ${Math.abs(s.change)}%</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function populatePortfolioTable() {
+  const el = document.getElementById('portfolioTable');
+  if (!el) return;
+  el.innerHTML = stocks.slice(0,5).map(s => `
+    <tr>
+      <td><div class="ticker-cell">
+        <div class="ticker-logo" style="background:${s.color}">${s.ticker.slice(0,2)}</div>
+        <div><div style="font-weight:600">${s.ticker}</div><div style="font-size:11px;color:var(--text2)">${s.name}</div></div>
+      </div></td>
+      <td style="font-weight:600">AOA ${s.price.toFixed(2)}</td>
+      <td style="color:${s.change >= 0 ? 'var(--green)' : 'var(--red)'}">${s.change >= 0 ? '▲' : '▼'} ${Math.abs(s.change)}%</td>
+      <td><span class="badge ${s.change >= 0 ? 'badge-green' : 'badge-red'}">${s.change >= 0 ? '+' : ''}${(s.change * 120).toFixed(0)} AOA</span></td>
+    </tr>
+  `).join('');
+}
+
+function populateWatchlist() {
+  const el = document.getElementById('watchlistTable');
+  if (!el) return;
+  el.innerHTML = stocks.map((s, i) => {
+    const isUp = s.change >= 0;
+    const cid = `wl-${s.ticker}`;
+    return `<tr>
+      <td><div class="ticker-cell">
+        <div class="ticker-logo" style="background:${s.color}">${s.ticker.slice(0,2)}</div>
+        <div style="font-weight:600">${s.ticker}</div>
+      </div></td>
+      <td style="font-weight:600">AOA ${s.price.toFixed(2)}</td>
+      <td style="color:${isUp ? 'var(--green)' : 'var(--red)'};font-weight:600">${isUp ? '▲' : '▼'} ${Math.abs(s.change)}%</td>
+      <td style="width:80px"><canvas id="${cid}" width="80" height="36"></canvas></td>
+    </tr>`;
+  }).join('');
+
+  // draw sparklines
+  stocks.forEach(s => {
+    const ctx = document.getElementById(`wl-${s.ticker}`);
+    if (!ctx) return;
+    const isUp = s.change >= 0;
+    const data = Array.from({length: 12}, () => s.price * (0.95 + Math.random() * 0.1));
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.map((_,i) => i),
+        datasets: [{ data, borderColor: isUp ? '#2ecc8a' : '#e84b6a', borderWidth: 1.5, pointRadius: 0, tension: 0.4, fill: false }]
+      },
+      options: {
+        responsive: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } },
+        animation: false,
+      }
+    });
+  });
+}
+
+function populateTransactions() {
+  const el = document.getElementById('transactionsTable');
+  if (!el) return;
+  const types = ['Compra','Venda'];
+  const states = ['Concluída','Pendente','Cancelada'];
+  el.innerHTML = Array.from({length: 12}, (_, i) => {
+    const s = stocks[i % stocks.length];
+    const type = types[i % 2];
+    const state = states[i % 3];
+    const qty = Math.floor(Math.random() * 500 + 10);
+    return `<tr>
+      <td style="color:var(--text2);font-size:12px">${13 - i} Mai 2026</td>
+      <td><div class="ticker-cell"><div class="ticker-logo" style="background:${s.color}">${s.ticker.slice(0,2)}</div><div><div style="font-weight:600">${s.ticker}</div><div style="font-size:11px;color:var(--text2)">${s.name}</div></div></div></td>
+      <td><span class="badge ${type === 'Compra' ? 'badge-green' : 'badge-red'}">${type}</span></td>
+      <td>${qty}</td>
+      <td>AOA ${s.price.toFixed(2)}</td>
+      <td style="font-weight:600">AOA ${(qty * s.price).toLocaleString('pt-AO', {maximumFractionDigits:0})}</td>
+      <td><span class="badge ${state === 'Concluída' ? 'badge-green' : state === 'Pendente' ? 'badge-yellow' : 'badge-red'}">${state}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function populateMarketsTable() {
+  const el = document.getElementById('marketsTable');
+  if (!el) return;
+  el.innerHTML = stocks.map(s => `
+    <tr>
+      <td><div class="ticker-cell">
+        <div class="ticker-logo" style="background:${s.color}">${s.ticker.slice(0,2)}</div>
+        <div style="font-weight:700">${s.ticker}.AO</div>
+      </div></td>
+      <td>${s.name}</td>
+      <td style="font-weight:600">AOA ${s.price.toFixed(2)}</td>
+      <td style="color:${s.change >= 0 ? 'var(--green)' : 'var(--red)'};font-weight:600">${s.change >= 0 ? '▲' : '▼'} ${Math.abs(s.change)}%</td>
+      <td style="color:var(--text2)">${s.volume}</td>
+      <td style="color:var(--text2)">AOA ${s.cap}</td>
+      <td><span class="badge ${s.fraud > 70 ? 'badge-red' : s.fraud > 40 ? 'badge-yellow' : 'badge-green'}">${s.fraud > 70 ? 'Alto ' : s.fraud > 40 ? 'Médio ' : 'Baixo '}${s.fraud}%</span></td>
+    </tr>
+  `).join('');
+}
+
+function populateWalletTable() {
+  const el = document.getElementById('walletTable');
+  if (!el) return;
+  const moves = [
+    { date: '13 Mai 2026', type: 'Depósito', value: 'AOA 500.000', state: 'Concluída' },
+    { date: '10 Mai 2026', type: 'Levantamento', value: 'AOA 120.000', state: 'Concluída' },
+    { date: '08 Mai 2026', type: 'Depósito', value: 'AOA 200.000', state: 'Concluída' },
+    { date: '05 Mai 2026', type: 'Dividendo', value: 'AOA 28.400', state: 'Concluída' },
+    { date: '01 Mai 2026', type: 'Depósito', value: 'AOA 300.000', state: 'Pendente' },
+  ];
+  el.innerHTML = moves.map(m => `
+    <tr>
+      <td style="color:var(--text2);font-size:12px">${m.date}</td>
+      <td><span class="badge ${m.type === 'Depósito' || m.type === 'Dividendo' ? 'badge-green' : 'badge-red'}">${m.type}</span></td>
+      <td style="font-weight:600">${m.value}</td>
+      <td><span class="badge ${m.state === 'Concluída' ? 'badge-green' : 'badge-yellow'}">${m.state}</span></td>
+    </tr>
+  `).join('');
+}
+
+function populatePortfolioFullTable() {
+  const el = document.getElementById('portfolioFullTable');
+  if (!el) return;
+  el.innerHTML = stocks.map(s => {
+    const val = (s.price * Math.floor(Math.random() * 400 + 50)).toFixed(0);
+    const pnl = (s.change * 500).toFixed(0);
+    return `<tr>
+      <td><div class="ticker-cell">
+        <div class="ticker-logo" style="background:${s.color}">${s.ticker.slice(0,2)}</div>
+        <div><div style="font-weight:600">${s.ticker}</div><div style="font-size:11px;color:var(--text2)">${s.name}</div></div>
+      </div></td>
+      <td style="font-weight:600">AOA ${parseInt(val).toLocaleString()}</td>
+      <td style="color:${s.change >= 0 ? 'var(--green)' : 'var(--red)'};font-weight:600">${s.change >= 0 ? '+' : ''}AOA ${pnl}</td>
+      <td style="color:${s.change >= 0 ? 'var(--green)' : 'var(--red)'}">${s.change >= 0 ? '▲' : '▼'}${Math.abs(s.change)}%</td>
+    </tr>`;
+  }).join('');
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded', () => {
+  populateMarketList();
+  populatePortfolioCards();
+  populateWatchlist();
+  populateTransactions();
+  populateMarketsTable();
+  populateWalletTable();
+  populatePortfolioFullTable();
+  setTimeout(() => initHomeCharts(), 100);
+});
+</script>
+</body>
+</html>

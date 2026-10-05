@@ -1,0 +1,5 @@
+@import url('/css/common.css');
+
+body[data-page="home"] .content {
+  min-height: calc(100vh - 96px);
+}

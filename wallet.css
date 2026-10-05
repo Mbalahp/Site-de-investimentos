@@ -1,0 +1,5 @@
+@import url('/css/common.css');
+
+body[data-page="wallet"] .card > button {
+  margin-top: 12px;
+}
